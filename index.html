@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ハロスケ</title>
 
-<!-- FullCalendar CSS -->
-https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css
+<!-- ✅ FullCalendar CSS（絶対この書き方） -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
 <style>
 body {
@@ -29,7 +29,7 @@ body {
   font-weight: bold;
 }
 
-/* フィルタ */
+/* フィルター */
 .filter-box {
   background: white;
   margin: 10px;
@@ -97,11 +97,11 @@ select, button {
 
 <div id="calendar"></div>
 
-<!-- FullCalendar JS -->
-https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js>
+<!-- ✅ FullCalendar JS（これも超重要） -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
-// ===== データ =====
+// -------- データ --------
 
 const membersByGroup = {
   "BEYOOOOONDS": ["全員", "一岡", "島倉", "西田"],
@@ -114,7 +114,7 @@ const allEvents = [
   { title: "Morning LIVE", date: "2026-05-20", group: "モーニング娘。", member: "石田", type: "CONCERT" }
 ];
 
-// ===== カレンダー =====
+// -------- カレンダー --------
 
 const calendar = new FullCalendar.Calendar(
   document.getElementById("calendar"),
@@ -142,7 +142,7 @@ const calendar = new FullCalendar.Calendar(
 
 calendar.render();
 
-// ===== メンバー更新 =====
+// -------- メンバー更新 --------
 
 function updateMembers() {
   const group = document.getElementById("groupSelect").value;
@@ -153,14 +153,14 @@ function updateMembers() {
   const list = membersByGroup[group] || ["全員"];
 
   list.forEach(m => {
-    let opt = document.createElement("option");
+    const opt = document.createElement("option");
     opt.value = m;
     opt.textContent = m;
     memberSelect.appendChild(opt);
   });
 }
 
-// ===== フィルター =====
+// -------- フィルター --------
 
 function applyFilter() {
   const group = document.getElementById("groupSelect").value;
@@ -178,7 +178,7 @@ function applyFilter() {
   calendar.addEventSource(filtered);
 }
 
-// ===== リセット =====
+// -------- リセット --------
 
 function resetFilter() {
   document.getElementById("groupSelect").value = "ALL";
@@ -190,7 +190,7 @@ function resetFilter() {
   calendar.addEventSource(allEvents);
 }
 
-// ===== 言語 =====
+// -------- 言語切替 --------
 
 function setLang(l){
   calendar.setOption('locale', l === 'ja' ? 'ja' : 'en');
@@ -198,6 +198,7 @@ function setLang(l){
 
 // 初期化
 updateMembers();
+
 </script>
 
 </body>
