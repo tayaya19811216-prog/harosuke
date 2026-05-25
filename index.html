@@ -5,36 +5,57 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ハロスケ</title>
 
-<!-- ✅ FullCalendar CSS（絶対この書き方） -->
+<!-- ✅ FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
-  font-family: sans-serif;
-  background: #f3f5f8;
+  font-family: "Segoe UI", sans-serif;
+  background: #f0f4f8;
 }
 
-/* ヘッダー */
+/* ===== ヘッダー ===== */
 .header {
-  background: linear-gradient(90deg,#3b6ea5,#4e89d9);
+  background: linear-gradient(90deg,#2f5fa5,#4e89d9);
   color: white;
-  padding: 15px;
+  padding: 16px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .header-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
 }
 
-/* フィルター */
+.header button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid white;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.header button:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* ===== フィルター ===== */
 .filter-box {
   background: white;
-  margin: 10px;
-  padding: 15px;
-  border-radius: 10px;
+  margin: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.filter-box h3 {
+  margin: 0 0 10px;
+  color: #2f5fa5;
 }
 
 .select-row {
@@ -44,17 +65,44 @@ body {
   margin-bottom: 10px;
 }
 
-select, button {
-  padding: 8px;
-  border-radius: 6px;
+select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-/* カレンダー */
+/* ===== ボタン ===== */
+button {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #4e89d9;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #3b6ea5;
+}
+
+/* ===== カレンダー ===== */
 #calendar {
   background: white;
-  margin: 10px;
+  margin: 15px;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 今日を強調 */
+.fc-day-today {
+  background: #fff4cc !important;
+}
+
+/* イベント色 */
+.fc-event {
+  background-color: #4e89d9;
+  border: none;
 }
 </style>
 </head>
@@ -73,6 +121,7 @@ select, button {
 </div>
 
 <div class="filter-box">
+  <h3>絞り込み</h3>
 
   <div class="select-row">
     <select id="groupSelect" onchange="updateMembers()">
@@ -97,11 +146,11 @@ select, button {
 
 <div id="calendar"></div>
 
-<!-- ✅ FullCalendar JS（これも超重要） -->
+<!-- ✅ FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
-// -------- データ --------
+// ===== データ =====
 
 const membersByGroup = {
   "BEYOOOOONDS": ["全員", "一岡", "島倉", "西田"],
@@ -114,7 +163,7 @@ const allEvents = [
   { title: "Morning LIVE", date: "2026-05-20", group: "モーニング娘。", member: "石田", type: "CONCERT" }
 ];
 
-// -------- カレンダー --------
+// ===== カレンダー =====
 
 const calendar = new FullCalendar.Calendar(
   document.getElementById("calendar"),
@@ -142,7 +191,7 @@ const calendar = new FullCalendar.Calendar(
 
 calendar.render();
 
-// -------- メンバー更新 --------
+// ===== メンバー連動 =====
 
 function updateMembers() {
   const group = document.getElementById("groupSelect").value;
@@ -160,7 +209,7 @@ function updateMembers() {
   });
 }
 
-// -------- フィルター --------
+// ===== フィルター =====
 
 function applyFilter() {
   const group = document.getElementById("groupSelect").value;
@@ -178,7 +227,7 @@ function applyFilter() {
   calendar.addEventSource(filtered);
 }
 
-// -------- リセット --------
+// ===== リセット =====
 
 function resetFilter() {
   document.getElementById("groupSelect").value = "ALL";
@@ -190,16 +239,17 @@ function resetFilter() {
   calendar.addEventSource(allEvents);
 }
 
-// -------- 言語切替 --------
+// ===== 言語切替 =====
 
 function setLang(l){
   calendar.setOption('locale', l === 'ja' ? 'ja' : 'en');
 }
 
-// 初期化
+// ===== 初期化 =====
 updateMembers();
 
 </script>
 
 </body>
 </html>
+``
