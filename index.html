@@ -107,8 +107,10 @@ select {
       <option>2026年</option>
     </select>
 
-    <select>
-      <option>BEYOOOOONDS</option>
+    <select id="groupSelect">
+      <option value="ALL">すべて</option>
+      <option value="BEYOOOOONDS">BEYOOOOONDS</option>
+      <option value="モーニング娘。">モーニング娘。</option>
     </select>
   </div>
 
@@ -117,14 +119,16 @@ select {
       <option>すべてのメンバー</option>
     </select>
 
-    <select>
-      <option>CONCERT</option>
+    <select id="typeSelect">
+      <option value="ALL">すべて</option>
+      <option value="CONCERT">CONCERT</option>
+      <option value="EVENT">EVENT</option>
     </select>
   </div>
 
   <div class="button-row">
-    <button>適用</button>
-    <button>リセット</button>
+    <button onclick="applyFilter()">適用</button>
+    <button onclick="resetFilter()">リセット</button>
   </div>
 
 </div>
@@ -137,11 +141,14 @@ select {
 <script>
 let lang = "ja";
 
-function setLang(l){
-  lang = l;
-  calendar.setOption('locale', l === 'ja' ? 'ja' : 'en');
-}
+// ✅ データ
+const allEvents = [
+  { title: "BEYOOOOONDS LIVE", date: "2026-05-10", group: "BEYOOOOONDS", type: "CONCERT" },
+  { title: "ライブ", date: "2026-05-12", group: "モーニング娘。", type: "CONCERT" },
+  { title: "イベント", date: "2026-05-20", group: "BEYOOOOONDS", type: "EVENT" }
+];
 
+// ✅ カレンダー
 const calendar = new FullCalendar.Calendar(
   document.getElementById("calendar"),
   {
@@ -163,15 +170,41 @@ const calendar = new FullCalendar.Calendar(
 
     height: "auto",
 
-    events: [
-      { title: "テストイベント", date: "2026-05-10" },
-      { title: "ライブ", date: "2026-05-12" },
-      { title: "イベント", date: "2026-05-20" }
-    ]
+    events: allEvents
   }
 );
 
 calendar.render();
+
+// ✅ フィルター
+function applyFilter() {
+  const group = document.getElementById("groupSelect").value;
+  const type = document.getElementById("typeSelect").value;
+
+  const filtered = allEvents.filter(e => {
+    const g = (group === "ALL" || e.group === group);
+    const t = (type === "ALL" || e.type === type);
+    return g && t;
+  });
+
+  calendar.removeAllEvents();
+  calendar.addEventSource(filtered);
+}
+
+// ✅ リセット
+function resetFilter() {
+  document.getElementById("groupSelect").value = "ALL";
+  document.getElementById("typeSelect").value = "ALL";
+
+  calendar.removeAllEvents();
+  calendar.addEventSource(allEvents);
+}
+
+// ✅ 言語切替
+function setLang(l){
+  lang = l;
+  calendar.setOption('locale', l === 'ja' ? 'ja' : 'en');
+}
 </script>
 
 </body>
