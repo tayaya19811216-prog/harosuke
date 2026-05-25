@@ -28,16 +28,6 @@ body {
   font-weight: bold;
 }
 
-.header button {
-  margin-left: 10px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid white;
-  background: transparent;
-  color: white;
-}
-
-/* フィルター */
 .filter-box {
   background: white;
   margin: 15px;
@@ -49,6 +39,7 @@ body {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 select, button {
@@ -56,7 +47,6 @@ select, button {
   border-radius: 8px;
 }
 
-/* カレンダー */
 #calendar {
   background: white;
   margin: 15px;
@@ -84,8 +74,8 @@ select, button {
 </div>
 
 <div class="filter-box">
-  <div class="select-row">
 
+  <div class="select-row">
     <select id="groupSelect" onchange="updateMembers()">
       <option value="ALL">すべて</option>
       <option value="BEYOOOOONDS">BEYOOOOONDS</option>
@@ -99,11 +89,11 @@ select, button {
       <option value="CONCERT">CONCERT</option>
       <option value="EVENT">EVENT</option>
     </select>
-
   </div>
 
   <button onclick="applyFilter()">適用</button>
   <button onclick="resetFilter()">リセット</button>
+
 </div>
 
 <div id="calendar"></div>
@@ -113,7 +103,7 @@ select, button {
 
 <script>
 
-// ===== データ（あとでJSONで上書き） =====
+// ===== 重要：配列は空で定義 =====
 let allEvents = [];
 
 // ===== メンバー =====
@@ -142,9 +132,8 @@ const calendar = new FullCalendar.Calendar(
       list: "リスト"
     },
 
-    events: [],
+    events: [],   // ←ここ重要（空）
 
-    // ✅ イベントクリック詳細
     eventClick: function(info) {
       const e = info.event.extendedProps;
 
@@ -161,12 +150,16 @@ const calendar = new FullCalendar.Calendar(
 
 calendar.render();
 
-// ===== JSON読み込み（ここが本物化） =====
+// ===== ✅ JSON読み込み（ここが本物化の心臓） =====
 fetch("events.json")
   .then(res => res.json())
   .then(data => {
+    console.log("JSON読み込み成功:", data);  // ←デバッグ用
     allEvents = data;
     calendar.addEventSource(allEvents);
+  })
+  .catch(err => {
+    console.error("JSON読み込み失敗:", err);
   });
 
 // ===== メンバー更新 =====
