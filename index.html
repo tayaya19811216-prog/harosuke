@@ -40,10 +40,6 @@ body {
   cursor: pointer;
 }
 
-.header button:hover {
-  background: rgba(255,255,255,0.2);
-}
-
 /* ===== フィルター ===== */
 .filter-box {
   background: white;
@@ -51,11 +47,6 @@ body {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.filter-box h3 {
-  margin: 0 0 10px;
-  color: #2f5fa5;
 }
 
 .select-row {
@@ -66,19 +57,17 @@ body {
 }
 
 select {
-  padding: 8px 12px;
+  padding: 8px;
   border-radius: 8px;
-  border: 1px solid #ccc;
 }
 
 /* ===== ボタン ===== */
 button {
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 8px;
-  border: none;
   background: #4e89d9;
   color: white;
-  cursor: pointer;
+  border: none;
 }
 
 button:hover {
@@ -91,18 +80,11 @@ button:hover {
   margin: 15px;
   padding: 10px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* 今日を強調 */
+/* 今日 */
 .fc-day-today {
   background: #fff4cc !important;
-}
-
-/* イベント色 */
-.fc-event {
-  background-color: #4e89d9;
-  border: none;
 }
 </style>
 </head>
@@ -121,7 +103,6 @@ button:hover {
 </div>
 
 <div class="filter-box">
-  <h3>絞り込み</h3>
 
   <div class="select-row">
     <select id="groupSelect" onchange="updateMembers()">
@@ -151,7 +132,6 @@ button:hover {
 
 <script>
 // ===== データ =====
-
 const membersByGroup = {
   "BEYOOOOONDS": ["全員", "一岡", "島倉", "西田"],
   "モーニング娘。": ["全員", "譜久村", "石田", "小田"]
@@ -164,7 +144,6 @@ const allEvents = [
 ];
 
 // ===== カレンダー =====
-
 const calendar = new FullCalendar.Calendar(
   document.getElementById("calendar"),
   {
@@ -184,15 +163,26 @@ const calendar = new FullCalendar.Calendar(
       list: "リスト"
     },
 
-    height: "auto",
-    events: allEvents
+    events: allEvents,
+
+    // ✅ ⭐ イベントクリック詳細表示
+    eventClick: function(info) {
+      const e = info.event.extendedProps;
+
+      alert(
+        "タイトル：" + info.event.title + "\n" +
+        "日付：" + info.event.startStr + "\n" +
+        "グループ：" + e.group + "\n" +
+        "メンバー：" + e.member + "\n" +
+        "種類：" + e.type
+      );
+    }
   }
 );
 
 calendar.render();
 
-// ===== メンバー連動 =====
-
+// ===== メンバー更新 =====
 function updateMembers() {
   const group = document.getElementById("groupSelect").value;
   const memberSelect = document.getElementById("memberSelect");
@@ -210,7 +200,6 @@ function updateMembers() {
 }
 
 // ===== フィルター =====
-
 function applyFilter() {
   const group = document.getElementById("groupSelect").value;
   const member = document.getElementById("memberSelect").value;
@@ -228,28 +217,23 @@ function applyFilter() {
 }
 
 // ===== リセット =====
-
 function resetFilter() {
   document.getElementById("groupSelect").value = "ALL";
   document.getElementById("typeSelect").value = "ALL";
 
   updateMembers();
-
   calendar.removeAllEvents();
   calendar.addEventSource(allEvents);
 }
 
-// ===== 言語切替 =====
-
+// ===== 言語 =====
 function setLang(l){
   calendar.setOption('locale', l === 'ja' ? 'ja' : 'en');
 }
 
-// ===== 初期化 =====
+// 初期化
 updateMembers();
-
 </script>
 
 </body>
 </html>
-``
