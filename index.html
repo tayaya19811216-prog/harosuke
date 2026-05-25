@@ -6,7 +6,7 @@
 
 <title>ハロスケ</title>
 
-<!-- ✅ CSS -->
+<!-- ✅ FullCalendar CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
 <style>
@@ -16,18 +16,33 @@ body {
   background: #f3f5f8;
 }
 
+/* ヘッダー */
 .header {
   background: linear-gradient(90deg,#3b6ea5,#4e89d9);
   color: white;
   padding: 15px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .header-title {
   font-size: 18px;
+  font-weight: bold;
+  line-height: 1.3;
 }
 
+.header-right button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid white;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+/* フィルタ */
 .filter-box {
   background: white;
   margin: 10px;
@@ -35,6 +50,32 @@ body {
   border-radius: 10px;
 }
 
+.filter-box h3 {
+  color: #3b6ea5;
+}
+
+.select-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+select {
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.button-row button {
+  margin-right: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: white;
+  cursor: pointer;
+}
+
+/* カレンダー */
 #calendar {
   background: white;
   margin: 10px;
@@ -48,27 +89,84 @@ body {
 
 <div class="header">
   <div class="header-title">
-    ハロー！プロジェクトスケジュール
+    ハロー！プロジェクト<br>スケジュール
+  </div>
+
+  <div class="header-right">
+    <button onclick="setLang('ja')">JP</button>
+    <button onclick="setLang('en')">EN</button>
+    <button>キャッシュ残り 57分</button>
   </div>
 </div>
 
 <div class="filter-box">
-  絞り込みUI（仮）
+  <h3>絞り込み</h3>
+
+  <div class="select-row">
+    <select>
+      <option>2026年</option>
+    </select>
+
+    <select>
+      <option>BEYOOOOONDS</option>
+    </select>
+  </div>
+
+  <div class="select-row">
+    <select>
+      <option>すべてのメンバー</option>
+    </select>
+
+    <select>
+      <option>CONCERT</option>
+    </select>
+  </div>
+
+  <div class="button-row">
+    <button>適用</button>
+    <button>リセット</button>
+  </div>
+
 </div>
 
 <div id="calendar"></div>
 
-<!-- ✅ JS -->
+<!-- ✅ FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
+let lang = "ja";
+
+function setLang(l){
+  lang = l;
+  calendar.setOption('locale', l === 'ja' ? 'ja' : 'en');
+}
+
 const calendar = new FullCalendar.Calendar(
   document.getElementById("calendar"),
   {
     initialView: "dayGridMonth",
+    locale: "ja",
+
+    headerToolbar: {
+      left: "prev,next today",
+      center: "title",
+      right: "dayGridMonth,timeGridWeek,listWeek"
+    },
+
+    buttonText: {
+      today: "今日",
+      month: "月",
+      week: "週",
+      list: "リスト"
+    },
+
     height: "auto",
+
     events: [
-      { title: "テストイベント", start: "2026-05-10" }
+      { title: "テストイベント", date: "2026-05-10" },
+      { title: "ライブ", date: "2026-05-12" },
+      { title: "イベント", date: "2026-05-20" }
     ]
   }
 );
