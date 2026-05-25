@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ハロスケ</title>
 
-<!-- ✅ FullCalendar CSS -->
+<!-- ✅ FullCalendar CSS（正しい書き方） -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
 <style>
@@ -98,12 +98,12 @@ select, button {
 
 <div id="calendar"></div>
 
-<!-- ✅ FullCalendar JS -->
+<!-- ✅ FullCalendar JS（正しい書き方） -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
 
-// ===== 重要：配列は空で定義 =====
+// ===== データ =====
 let allEvents = [];
 
 // ===== メンバー =====
@@ -132,7 +132,7 @@ const calendar = new FullCalendar.Calendar(
       list: "リスト"
     },
 
-    events: [],   // ←ここ重要（空）
+    events: [],
 
     eventClick: function(info) {
       const e = info.event.extendedProps;
@@ -150,12 +150,18 @@ const calendar = new FullCalendar.Calendar(
 
 calendar.render();
 
-// ===== ✅ JSON読み込み（ここが本物化の心臓） =====
+// ✅ JSON読み込み（最重要部分）
 fetch("events.json")
   .then(res => res.json())
   .then(data => {
-    console.log("JSON読み込み成功:", data);  // ←デバッグ用
+    console.log("JSON読み込み成功:", data);
+
     allEvents = data;
+
+    // ✅ 古いイベント削除
+    calendar.removeAllEvents();
+
+    // ✅ 新しいイベント追加
     calendar.addEventSource(allEvents);
   })
   .catch(err => {
