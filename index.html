@@ -15,14 +15,12 @@ body {
   background: #f0f4f8;
 }
 
-/* ===== ヘッダー ===== */
 .header {
   background: linear-gradient(90deg,#2f5fa5,#4e89d9);
   color: white;
   padding: 16px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .header-title {
@@ -37,44 +35,28 @@ body {
   border: 1px solid white;
   background: transparent;
   color: white;
-  cursor: pointer;
 }
 
-/* ===== フィルター ===== */
+/* フィルター */
 .filter-box {
   background: white;
   margin: 15px;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .select-row {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 10px;
 }
 
-select {
+select, button {
   padding: 8px;
   border-radius: 8px;
 }
 
-/* ===== ボタン ===== */
-button {
-  padding: 8px 12px;
-  border-radius: 8px;
-  background: #4e89d9;
-  color: white;
-  border: none;
-}
-
-button:hover {
-  background: #3b6ea5;
-}
-
-/* ===== カレンダー ===== */
+/* カレンダー */
 #calendar {
   background: white;
   margin: 15px;
@@ -82,7 +64,6 @@ button:hover {
   border-radius: 12px;
 }
 
-/* 今日 */
 .fc-day-today {
   background: #fff4cc !important;
 }
@@ -103,8 +84,8 @@ button:hover {
 </div>
 
 <div class="filter-box">
-
   <div class="select-row">
+
     <select id="groupSelect" onchange="updateMembers()">
       <option value="ALL">すべて</option>
       <option value="BEYOOOOONDS">BEYOOOOONDS</option>
@@ -118,11 +99,11 @@ button:hover {
       <option value="CONCERT">CONCERT</option>
       <option value="EVENT">EVENT</option>
     </select>
+
   </div>
 
   <button onclick="applyFilter()">適用</button>
   <button onclick="resetFilter()">リセット</button>
-
 </div>
 
 <div id="calendar"></div>
@@ -131,17 +112,15 @@ button:hover {
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 <script>
-// ===== データ =====
+
+// ===== データ（あとでJSONで上書き） =====
+let allEvents = [];
+
+// ===== メンバー =====
 const membersByGroup = {
   "BEYOOOOONDS": ["全員", "一岡", "島倉", "西田"],
   "モーニング娘。": ["全員", "譜久村", "石田", "小田"]
 };
-
-const allEvents = [
-  { title: "BEYO LIVE", date: "2026-05-10", group: "BEYOOOOONDS", member: "一岡", type: "CONCERT" },
-  { title: "BEYO EVENT", date: "2026-05-12", group: "BEYOOOOONDS", member: "島倉", type: "EVENT" },
-  { title: "Morning LIVE", date: "2026-05-20", group: "モーニング娘。", member: "石田", type: "CONCERT" }
-];
 
 // ===== カレンダー =====
 const calendar = new FullCalendar.Calendar(
@@ -163,9 +142,9 @@ const calendar = new FullCalendar.Calendar(
       list: "リスト"
     },
 
-    events: allEvents,
+    events: [],
 
-    // ✅ ⭐ イベントクリック詳細表示
+    // ✅ イベントクリック詳細
     eventClick: function(info) {
       const e = info.event.extendedProps;
 
@@ -181,6 +160,14 @@ const calendar = new FullCalendar.Calendar(
 );
 
 calendar.render();
+
+// ===== JSON読み込み（ここが本物化） =====
+fetch("events.json")
+  .then(res => res.json())
+  .then(data => {
+    allEvents = data;
+    calendar.addEventSource(allEvents);
+  });
 
 // ===== メンバー更新 =====
 function updateMembers() {
@@ -206,10 +193,9 @@ function applyFilter() {
   const type = document.getElementById("typeSelect").value;
 
   const filtered = allEvents.filter(e => {
-    const g = (group === "ALL") || e.group === group;
-    const m = (!member || member === "全員") || e.member === member;
-    const t = (type === "ALL") || e.type === type;
-    return g && m && t;
+    return (group === "ALL" || e.group === group) &&
+           (member === "全員" || e.member === member) &&
+           (type === "ALL" || e.type === type);
   });
 
   calendar.removeAllEvents();
@@ -222,6 +208,7 @@ function resetFilter() {
   document.getElementById("typeSelect").value = "ALL";
 
   updateMembers();
+
   calendar.removeAllEvents();
   calendar.addEventSource(allEvents);
 }
@@ -233,6 +220,7 @@ function setLang(l){
 
 // 初期化
 updateMembers();
+
 </script>
 
 </body>
