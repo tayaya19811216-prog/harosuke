@@ -6,7 +6,7 @@
 
 <title>ハロスケ</title>
 
-<!-- ✅ FullCalendar CSS -->
+<!-- ✅ CSS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 
 <style>
@@ -16,5 +16,65 @@ body {
   background: #f3f5f8;
 }
 
-/* ヘッダー */
 .header {
+  background: linear-gradient(90deg,#3b6ea5,#4e89d9);
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-title {
+  font-size: 18px;
+}
+
+.filter-box {
+  background: white;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+#calendar {
+  background: white;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="header-title">
+    ハロー！プロジェクトスケジュール
+  </div>
+</div>
+
+<div class="filter-box">
+  絞り込みUI（仮）
+</div>
+
+<div id="calendar"></div>
+
+<!-- ✅ JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+const calendar = new FullCalendar.Calendar(
+  document.getElementById("calendar"),
+  {
+    initialView: "dayGridMonth",
+    height: "auto",
+    events: [
+      { title: "テストイベント", start: "2026-05-10" }
+    ]
+  }
+);
+
+calendar.render();
+</script>
+
+</body>
+</html>
